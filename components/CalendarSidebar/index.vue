@@ -22,33 +22,113 @@
         </div>
       </div>
     </div>
-
-    <div class="search">
-      <a-input-search
-        placeholder="Enter Employee Name..."
-        enter-button="Search"
-        @search="onSearch"
-      />
-    </div>
+    <form class="filter">
+      <a-form-item label="Head Quarter" style="width: 100%">
+        <a-select style="width: 100%;"
+          v-model="headQuarterId"
+        v-decorator="[
+          'headQuarterId',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Please select head quarter!',
+              },
+            ],
+          },
+        ]">
+          <a-select-option v-for="option in headQuarter" :key="option.id" :value="option.id">{{ option.name
+          }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="Work Place" style="width: 100%">
+        <a-select style="width: 100%;" 
+        v-model="workPlaceId"
+        v-decorator="[
+          'workPlaceId',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Please select work place!',
+              },
+            ],
+          },
+        ]">
+          <a-select-option v-for="option in workPlace" :key="option.id" :value="option.id">{{ option.name
+          }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <div class="search">
+        <a-input-search placeholder="Enter Employee Name..." enter-button="Search"  @search="onSearch"/>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
 import CustomSelect from "~/components/CustomSelect";
+import PersonService from "../../services/api/personService";
+
 export default {
   name: "CalendarSidebar",
   comments: [CustomSelect],
   data: () => ({
     userOptions: ["Nhân Viên A", "Nhân Viên D", "Nhân Viên C", "Nhân Viên D"],
     loading: false,
+    headQuarterId: "All",
+    workPlaceId: "All",
+    headQuarter: [],
+    workPlace: [],
   }),
+  fetch() {
+    Promise.all([
+      this.getHeadQuaters(),
+      this.getWorkPlaces(),
+    ]);
+  },
   methods: {
     onSearch(value) {
-      this.$emit("searchValue", value);
+      const workPlaceId = this.workPlace.find((item) => item.id == this.workPlaceId)
+      const headQuarterId = this.workPlace.find((item) => item.id == this.headQuarterId)
+      const dataSearch = value+';'+(workPlaceId !== null ? workPlaceId?.name : 'all') + ';'+(headQuarterId !== null ? headQuarterId?.name : 'all');
+      this.$emit("searchValue", dataSearch);
     },
-
-    handleSelectUser(data) {
-      this.searchData = { data };
+    updateValue(event){
+      this.$emit('update', event);
+    },
+    async getHeadQuaters(){
+      try{
+        const res = await PersonService.get(
+          "user/working-schedule/get-headquarters"
+        );
+        const listHeadQuater = res.data.data;
+        listHeadQuater.unshift({
+          id: listHeadQuater.length + 1,
+          name: "All"
+        })
+        this.headQuarter = listHeadQuater;
+        localStorage.setItem("headQuarter",JSON.stringify(this.headQuarter));
+      }catch(error){
+        console.log(error);
+      }
+    },
+    async getWorkPlaces(){
+      try{
+        const res = await PersonService.get(
+          "user/working-schedule/get-workplaces"
+        );
+        const listWorkPlace = res.data.data;
+        listWorkPlace.unshift({
+          id: listWorkPlace.length + 1,
+          name: "All"
+        })
+        this.headQuarter = listWorkPlace;
+        this.workPlace = res.data.data;
+        localStorage.setItem("workPlace",JSON.stringify(this.workPlace));
+      }catch(error){
+        console.log(error);
+      }
     },
   },
 };
@@ -56,6 +136,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   padding: 10px 12px;
+
   .Company {
     background-color: Red;
   }
@@ -71,16 +152,18 @@ export default {
   .Leave {
     background-color: Purple;
   }
-  .user {
-  }
+
+  .user {}
 
   .workday {
     .workday-title {
       font-size: 24px;
       margin-bottom: 8px;
     }
+
     .workday-box {
       margin-left: 16px;
+
       .status {
         display: flex;
         gap: 6px;

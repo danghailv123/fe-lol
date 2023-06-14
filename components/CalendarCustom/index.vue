@@ -35,20 +35,14 @@
         </v-toolbar>
       </v-sheet>
       <v-sheet class="calendar-main">
-        <v-calendar
-          ref="calendar"
-          v-model="focus"
-          color="primary"
-          :events="events"
-          :weekdays="weekdays"
-          :weekday-format="getDay"
-          :event-color="getEventColor"
-          :type="type"
-          :locale-first-day-of-year="1"
-          @click:event="showEvent"
-          @click:date="viewDay"
-          @click:more="viewDay"
-        ></v-calendar>
+        <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :weekdays="weekdays"
+          :weekday-format="getDay" :event-color="getEventColor" :type="type" :locale-first-day-of-year="1"
+          @click:event="showEvent" @click:date="viewDay" @click:more="viewDay">
+          <template v-slot:event="{ event }">
+            <b-badge v-b-tooltip.hover.topLeft :title="event.name">{{ formatAMPM(event.start) }} - {{
+              formatAMPM(event.end) }}</b-badge>
+          </template>
+        </v-calendar>
         <!-- modal events -->
         <!-- <v-menu
           v-model="selectedOpen"
@@ -71,19 +65,17 @@
               <div class="form-events">
                 <a-form :form="form" @submit="handleUpdateEvent">
                   <a-form-item label="Title">
-                    <a-input
-                      v-decorator="[
-                        'title',
-                        {
-                          rules: [
-                            {
-                              required: true,
-                              message: 'Please input your Title!',
-                            },
-                          ],
-                        },
-                      ]"
-                    />
+                    <a-input v-decorator="[
+                      'title',
+                      {
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Please input your Title!',
+                          },
+                        ],
+                      },
+                    ]" />
                   </a-form-item>
                   <a-form-item label="Description">
                     <a-textarea v-decorator="['description']" />
@@ -102,91 +94,67 @@
                   </div>
                   <div style="display: flex; gap: 4px">
                     <a-form-item label="Shift" style="width: 100%">
-                      <a-select
-                        v-decorator="[
-                          'shiftId',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Please select shift!',
-                              },
-                            ],
-                          },
-                        ]"
-                      >
-                        <a-select-option
-                          v-for="option in shiftOptions"
-                          :key="option.id"
-                          :value="option.id"
-                          >{{ option.name }}</a-select-option
-                        >
+                      <a-select v-decorator="[
+                        'shiftId',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please select shift!',
+                            },
+                          ],
+                        },
+                      ]">
+                        <a-select-option v-for="option in shiftOptions" :key="option.id" :value="option.id">{{ option.name
+                        }}</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Work Type" style="width: 100%">
-                      <a-select
-                        v-decorator="[
-                          'workTypeId',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Please select work type!',
-                              },
-                            ],
-                          },
-                        ]"
-                      >
-                        <a-select-option
-                          v-for="option in workType"
-                          :key="option.id"
-                          :value="option.id"
-                          >{{ option.name }}</a-select-option
-                        >
+                      <a-select v-decorator="[
+                        'workTypeId',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please select work type!',
+                            },
+                          ],
+                        },
+                      ]">
+                        <a-select-option v-for="option in workType" :key="option.id" :value="option.id">{{ option.name
+                        }}</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Head Quarter" style="width: 100%">
-                      <a-select
-                        v-decorator="[
-                          'headQuarterId',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Please select head quarter!',
-                              },
-                            ],
-                          },
-                        ]"
-                      >
-                        <a-select-option
-                          v-for="option in headQuarter"
-                          :key="option.id"
-                          :value="option.id"
-                          >{{ option.name }}</a-select-option
-                        >
+                      <a-select v-decorator="[
+                        'headQuarterId',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please select head quarter!',
+                            },
+                          ],
+                        },
+                      ]">
+                        <a-select-option v-for="option in headQuarter" :key="option.id" :value="option.id">{{ option.name
+                        }}</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Work Place" style="width: 100%">
-                      <a-select
-                        v-decorator="[
-                          'workPlaceId',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Please select work place!',
-                              },
-                            ],
-                          },
-                        ]"
-                      >
-                        <a-select-option
-                          v-for="option in workPlace"
-                          :key="option.id"
-                          :value="option.id"
-                          >{{ option.name }}</a-select-option
-                        >
+                      <a-select v-decorator="[
+                        'workPlaceId',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please select work place!',
+                            },
+                          ],
+                        },
+                      ]">
+                        <a-select-option v-for="option in workPlace" :key="option.id" :value="option.id">{{ option.name
+                        }}</a-select-option>
                       </a-select>
                     </a-form-item>
                   </div>
@@ -214,6 +182,7 @@ import PersonService from "../../services/api/personService";
 
 export default {
   name: "CalendarCustom",
+  props: ['keyword'],
   data: () => ({
     focus: "",
     type: "month",
@@ -260,6 +229,16 @@ export default {
     ]);
   },
   watch: {
+    searchData: {
+      handler(val, oldVal) {
+        // do your stuff
+      }
+    },
+    keyword: {
+      handler(val, oldVal) {
+        // do your stuff
+      }
+    },
     currentMonth: {
       handler() {
         this.getFirstDateAndLastDate();
@@ -354,25 +333,25 @@ export default {
         console.log(error);
       }
     },
-    async getHeadQuaters(){
-      try{
+    async getHeadQuaters() {
+      try {
         const res = await PersonService.get(
           "user/working-schedule/get-headquarters"
         );
         this.headQuarter = res.data.data;
-        localStorage.setItem("headQuarter",JSON.stringify(this.headQuarter));
-      }catch(error){
+        localStorage.setItem("headQuarter", JSON.stringify(this.headQuarter));
+      } catch (error) {
         console.log(error);
       }
     },
-    async getWorkPlaces(){
-      try{
+    async getWorkPlaces() {
+      try {
         const res = await PersonService.get(
           "user/working-schedule/get-workplaces"
         );
         this.workPlace = res.data.data;
-        localStorage.setItem("workPlace",JSON.stringify(this.workPlace));
-      }catch(error){
+        localStorage.setItem("workPlace", JSON.stringify(this.workPlace));
+      } catch (error) {
         console.log(error);
       }
     },
@@ -443,6 +422,18 @@ export default {
 
       nativeEvent.stopPropagation();
     },
+    formatAMPM(dateString) {
+      const date = new Date(dateString);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      const strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    }
+
   },
 };
 </script>
@@ -450,21 +441,25 @@ export default {
 .calendar-main {
   height: calc(100% - 64px);
 }
+
 .select-type {
   display: flex;
   gap: 4px;
 }
+
 .popup-box {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+
 .popup-input {
   border: 1px solid black;
   border-radius: 4px;
   width: 100%;
   padding: 4px 8px;
 }
+
 .ant-modal-body {
   padding: 0 !important;
 }

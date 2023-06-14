@@ -1,10 +1,10 @@
 <template>
   <div class="all-box">
     <div class="sidebar">
-      <CalendarSidebar :search="handleSearch" />
+      <CalendarSidebar :search="handleSearch" v-model.sync="searchData" />
     </div>
     <div class="calendar">
-      <CalendarCustom/>
+      <CalendarCustom />
     </div>
   </div>
 </template>
@@ -18,12 +18,20 @@ export default {
     CalendarCustom,
     CalendarSidebar
   },
-
+  data() {
+    return {
+      searchData: "rgewg",
+    }
+  },
   methods: {
     handleSearch(){
       console.log();
     }
-  }
+  },
+  watch: {
+    searchData: function (val) {
+    },
+  },
 }
 </script>
 

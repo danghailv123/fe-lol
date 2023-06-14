@@ -33,6 +33,18 @@ export default {
     onSearch(data) {
       this.searchKey = data;
     },
+    dates(current) {
+      var week = new Array();
+      // Starting Monday not Sunday
+      current.setDate((current.getDate() - current.getDay() + 1));
+      for (var i = 0; i < 7; i++) {
+        week.push(
+          new Date(current)
+        );
+        current.setDate(current.getDate() + 1);
+      }
+      return week;
+    }
   },
 };
 </script>
@@ -43,8 +55,8 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  .sidebar {
-  }
+
+  .sidebar {}
 
   .calendar {
     margin: 4px;

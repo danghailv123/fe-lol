@@ -1,1 +1,1 @@
-export const HOST = "http://localhost:8286/api/"; // For Development
+export const HOST = "https://calenderreporttesst.herokuapp.com/api/"; // For Development

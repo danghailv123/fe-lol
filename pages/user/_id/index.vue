@@ -57,27 +57,30 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-1" label="Password :" label-for="input-1">
-          <b-form-input
-            id="input-1"
-            v-model="SignUp.password"
-            type="password"
-            placeholder="Enter "
-            required
-          ></b-form-input>
+          <b-form-input readonly id="input-1" v-model="pass" type="password" placeholder="Enter "
+                    required></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-1" label="Role :" label-for="input-1">
-          <a-select v-model="SignUp.role">
-            <a-select-option value="1"> User </a-select-option>
-            <a-select-option value="2"> Admin </a-select-option>
-          </a-select>
-        </b-form-group>
-        <b-form-group id="input-group-1" label="Sex :" label-for="input-1">
-          <a-select v-model="SignUp.sex">
-            <a-select-option value="0"> Girl </a-select-option>
-            <a-select-option value="1"> Man </a-select-option>
-            <a-select-option value="2">Unknown</a-select-option>
-          </a-select>
-        </b-form-group>
+                <a-select v-model="role">
+                    <a-select-option value="1"> User </a-select-option>
+                    <a-select-option value="2"> Admin </a-select-option>
+                </a-select>
+            </b-form-group>
+            <b-form-group id="input-group-1" label="Head Quater" style="width: 100%">
+                <a-select v-model="headQuarterId">
+                    <a-select-option value="1"> Yokohama </a-select-option>
+                    <a-select-option value="2"> Tokyo </a-select-option>
+                    <a-select-option value="3">Saporo</a-select-option>
+                    <a-select-option value="4">Miyagi</a-select-option>
+                </a-select>
+            </b-form-group>
+            <b-form-group id="input-group-1" label="Sex :" label-for="input-1">
+                <a-select v-model="sex">
+                    <a-select-option value="0"> Girl </a-select-option>
+                    <a-select-option value="1"> Man </a-select-option>
+                    <a-select-option value="2">Unknown</a-select-option>
+                </a-select>
+            </b-form-group>
         <b-form-group
           id="input-group-1"
           label="Description :"
@@ -103,6 +106,7 @@ import PersonService from "~/services/api/personService.js";
 export default {
   data() {
     return {
+      pass: "123456",
       SignUp: {
         address: "",
         birthDay: "",
@@ -113,16 +117,32 @@ export default {
         phoneNumber: "",
         role: 1,
         sex: 0,
+        headQuarterId: null
       },
+      headQuarter: [],
+      headQuarterId: "",
+      sex: "",
+      role: "",
     };
   },
   fetch() {
-    Promise.all([this.getValueId()]);
+    Promise.all([this.getValueId(), this.getHeadQuaters()]);
   },
   mounted() {
     this.getValueId();
   },
   methods: {
+    async getHeadQuaters() {
+      try {
+        const res = await PersonService.get(
+          "user/working-schedule/get-headquarters"
+        );
+        this.headQuarter = res.data.data;
+        localStorage.setItem("headQuarter", JSON.stringify(this.headQuarter));
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getValueId() {
       const id = this.$route.params.id;
       const url = `admin/user-manager/detail/${id}`;
@@ -130,6 +150,29 @@ export default {
         const res = await PersonService.get(url);
         if (res) {
           this.SignUp = res.data.data;
+          if (this.SignUp.sex == 1) {
+            this.sex = "Man";
+          } else if (this.SignUp.sex == 0) {
+            this.sex = "Girl";
+          } else {
+            this.sex = "Unknown";
+          }
+
+          if (this.SignUp.role == 1) {
+            this.role = "User";
+          } else if (this.SignUp.role == 2) {
+            this.role = "Admin";
+          }
+
+          if (this.SignUp.headQuarterId == 1) {
+            this.headQuarterId = "Yokohama";
+          } else if (this.SignUp.sex == 2) {
+            this.headQuarterId = "Tokyo";
+          } else if (this.SignUp.sex == 3) {
+            this.headQuarterId = "Saporo";
+          } else {
+            this.headQuarterId = "Miyagi";
+          }
         }
       } catch (error) {
         console.log(error);
@@ -144,10 +187,10 @@ export default {
       event.preventDefault();
 
       const id = this.$route.params.id;
-      const url = `admin/user-manager/update/${id}`;
+      const url = `info/update`;
       this.SignUp.birthDay = this.formattedDate(this.SignUp.birthDay);
       try {
-        const res = await PersonService.put(url, this.SignUp);
+        const res = await PersonService.post(url, this.SignUp);
         if (res) {
           this.$message.success("sửa thành công");
           this.getValueId();
@@ -166,9 +209,11 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .form {
   width: 100%;
 }
+
 .title {
   margin-top: 5%;
   text-align: center;

@@ -21,6 +21,12 @@
           <span>Account management</span>
         </nuxt-link>
       </v-toolbar-title>
+      <v-toolbar-title class="toolbar-title">
+        <nuxt-link to="/my_account" class="toolbar-link">
+          <v-icon> mdi-card-account-details</v-icon>
+          <span>My Profile</span>
+        </nuxt-link>
+      </v-toolbar-title>
       <v-spacer />
       <button @click="logout">logout</button>
     </v-app-bar>

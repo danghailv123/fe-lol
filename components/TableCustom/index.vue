@@ -7,88 +7,57 @@
         <span>{{ this.datePicker.endDate }}</span>
       </div>
       <v-spacer></v-spacer>
-      <a-week-picker
-        class="ma-2"
-        :locale="locale"
-        :allowClear="true"
-        @change="onChange"
-      />
+      <a-week-picker class="ma-2" :locale="locale" :allowClear="true" @change="onChange" />
     </div>
     <!-- -------------------table----------------------- -->
-    <a-table
-      bordered
-      :data-source="dataSource"
-      :columns="columns"
-      :pagination="false"
-    >
-      <div class="tag-box" slot="monday" slot-scope="monday">
-        <a-tag
-          v-for="tag in monday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+    <a-table bordered :data-source="dataSource" :columns="columns" :pagination="false">
+      <div class="tag-box" slot="monday" slot-scope="monday" key="monday">
+        <a-tag v-for="tag in monday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="tuesday" slot-scope="tuesday">
-        <a-tag
-          v-for="tag in tuesday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="tuesday" slot-scope="tuesday" key="tuesday">
+        <a-tag v-for="tag in tuesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="wednesday" slot-scope="wednesday">
-        <a-tag
-          v-for="tag in wednesday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="wednesday" slot-scope="wednesday" key="wednesday">
+        <a-tag v-for="tag in wednesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="thursday" slot-scope="thursday">
-        <a-tag
-          v-for="tag in thursday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="thursday" slot-scope="thursday" key="thursday">
+        <a-tag v-for="tag in thursday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="friday" slot-scope="friday">
-        <a-tag
-          v-for="tag in friday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="friday" slot-scope="friday" key="friday">
+        <a-tag v-for="tag in friday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="saturday" slot-scope="saturday">
-        <a-tag
-          v-for="tag in saturday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="saturday" slot-scope="saturday" key="saturday">
+        <a-tag v-for="tag in saturday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
-      <div class="tag-box" slot="sunday" slot-scope="sunday">
-        <a-tag
-          v-for="tag in sunday"
-          @click="handleClickTag(tag)"
-          :key="tag.id"
-          :color="colorTag(tag.workTypeName)"
-        >
-          {{ `${tag.startTime} - ${tag.endTime}` }}
+      <div class="tag-box" slot="sunday" slot-scope="sunday" key="sunday">
+        <a-tag v-for="tag in sunday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
+          <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            {{ `${tag.startTime} - ${tag.endTime}` }}
+          </a-tooltip>
         </a-tag>
       </div>
     </a-table>
@@ -109,19 +78,17 @@
           <div class="form-events">
             <a-form :form="form" @submit="handleUpdateEvent">
               <a-form-item label="Title">
-                <a-input
-                  v-decorator="[
-                    'title',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please input your Title!',
-                        },
-                      ],
-                    },
-                  ]"
-                />
+                <a-input v-decorator="[
+                  'title',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your Title!',
+                      },
+                    ],
+                  },
+                ]" />
               </a-form-item>
               <a-form-item label="Description">
                 <a-textarea v-decorator="['description']" />
@@ -140,93 +107,69 @@
               </div>
               <div style="display: flex; gap: 4px">
                 <a-form-item label=" Shift" style="width: 100%">
-                  <a-select
-                    v-decorator="[
-                      'shiftId',
-                      {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please select Shift!',
-                          },
-                        ],
-                      },
-                    ]"
-                  >
-                    <a-select-option
-                      v-for="option in shiftOptions"
-                      :key="option.id"
-                      :value="option.id"
-                      >{{ option.name }}</a-select-option
-                    >
+                  <a-select v-decorator="[
+                    'shiftId',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Please select Shift!',
+                        },
+                      ],
+                    },
+                  ]">
+                    <a-select-option v-for="option in shiftOptions" :key="option.id" :value="option.id">{{ option.name
+                    }}</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item label="Work Type" style="width: 100%">
-                  <a-select
-                    v-decorator="[
-                      'workTypeId',
-                      {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please select workType!',
-                          },
-                        ],
-                      },
-                    ]"
-                  >
-                    <a-select-option
-                      v-for="option in workType"
-                      :key="option.id"
-                      :value="option.id"
-                      >{{ option.name }}</a-select-option
-                    >
+                  <a-select v-decorator="[
+                    'workTypeId',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Please select workType!',
+                        },
+                      ],
+                    },
+                  ]">
+                    <a-select-option v-for="option in workType" :key="option.id" :value="option.id">{{ option.name
+                    }}</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item label="Head Quarter" style="width: 100%">
-                  <a-select
-                    v-decorator="[
-                      'headQuarterId',
-                      {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please select headQuarter!',
-                          },
-                        ],
-                      },
-                    ]"
-                  >
-                    <a-select-option
-                      v-for="option in headQuarter"
-                      :key="option.id"
-                      :value="option.id"
-                      >{{ option.name }}</a-select-option
-                    >
+                  <a-select v-decorator="[
+                    'headQuarterId',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Please select headQuarter!',
+                        },
+                      ],
+                    },
+                  ]">
+                    <a-select-option v-for="option in headQuarter" :key="option.id" :value="option.id">{{ option.name
+                    }}</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item label="Work Place" style="width: 100%">
-                      <a-select
-                        v-decorator="[
-                          'workPlaceId',
-                          {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Please select workPlace!',
-                              },
-                            ],
-                          },
-                        ]"
-                      >                    
-                        <a-select-option
-                          v-for="option in workPlace"
-                          :key="option.id"
-                          :value="option.id"
-                          >{{ option.name }}</a-select-option
-                        >
-                      </a-select>
-                    </a-form-item>
+                  <a-select v-decorator="[
+                    'workPlaceId',
+                    {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Please select workPlace!',
+                        },
+                      ],
+                    },
+                  ]">
+                    <a-select-option v-for="option in workPlace" :key="option.id" :value="option.id">{{ option.name
+                    }}</a-select-option>
+                  </a-select>
+                </a-form-item>
               </div>
               <a-form-item>
                 <a-button type="primary" html-type="submit"> Save </a-button>
@@ -272,56 +215,77 @@ export default {
           scopedSlots: { customRender: "name" },
         },
         {
-          title: "Sunday",
+          title: () => {
+            return (<div><span>Sunday</span> <br /> <span>{this.dateRangeSelected[0] ? this.formatDate(this.dateRangeSelected[0]) : ""}</span></div>)
+          },
           dataIndex: "sunday",
           key: "sunday",
           width: "12%",
           scopedSlots: { customRender: "sunday" },
+          subTitle: "hehe",
         },
         {
-          title: "Monday",
+          title: () => {
+            return (<div><span>Monday</span> <br /> <span>{this.dateRangeSelected[1] ? this.formatDate(this.dateRangeSelected[1]) : ""}</span></div>)
+          },
           dataIndex: "monday",
           key: "monday",
           width: "12%",
           scopedSlots: { customRender: "monday" },
+          subTitle: "hehe",
         },
         {
-          title: "Tuesday",
+          title: () => {
+            return (<div><span>Tuesday</span> <br /> <span>{this.dateRangeSelected[2] ? this.formatDate(this.dateRangeSelected[2]) : ""}</span></div>)
+          },
           dataIndex: "tuesday",
           key: "tuesday",
           width: "12%",
           scopedSlots: { customRender: "tuesday" },
+          subTitle: "hehe1",
         },
         {
-          title: "Wednesday",
+          title: () => {
+            return (<div><span>Wednesday</span> <br /> <span>{this.dateRangeSelected[3] ? this.formatDate(this.dateRangeSelected[3]) : ""}</span></div>)
+          },
           dataIndex: "wednesday",
           key: "wednesday",
           width: "12%",
           scopedSlots: { customRender: "wednesday" },
+          subTitle: "hehe2",
         },
         {
-          title: "Thursday",
+          title: () => {
+            return (<div><span>Thursday</span> <br /> <span>{this.dateRangeSelected[4] ? this.formatDate(this.dateRangeSelected[4]) : ""}</span></div>)
+          },
           dataIndex: "thursday",
           key: "thursday",
           width: "12%",
           scopedSlots: { customRender: "thursday" },
+          subTitle: "hehe3",
         },
         {
-          title: "Friday",
+          title: () => {
+            return (<div><span>Friday</span> <br /> <span>{this.dateRangeSelected[5] ? this.formatDate(this.dateRangeSelected[5]) : ""}</span></div>)
+          },
           dataIndex: "friday",
           key: "friday",
           width: "12%",
           scopedSlots: { customRender: "friday" },
+          subTitle: "hehe4",
         },
         {
-          title: "Saturday",
+          title: () => {
+            return (<div><span>Saturday</span> <br /> <span>{this.dateRangeSelected[6] ? this.formatDate(this.dateRangeSelected[6]) : ""}</span></div>)
+          },
           dataIndex: "saturday",
           key: "saturday",
           width: "12%",
           scopedSlots: { customRender: "saturday" },
+          subTitle: "hehe5",
         },
       ],
-      datePicker: {      
+      datePicker: {
         startDate: "",
         endDate: "",
       },
@@ -345,7 +309,6 @@ export default {
     datePicker: {
       handler(value) {
         this.dateRangeSelected = getDaysBetween(value.startDate, value.endDate);
-
         const cols = this.columns.map((column, index) => {
           return {
             ...column,
@@ -353,17 +316,17 @@ export default {
               column.dataIndex === "name"
                 ? column.title
                 : () => {
-                    if (index <= this.dateRangeSelected.length) {
-                      const date = this.dateRangeSelected[index - 1];
-                      return (
-                        <div>
-                          {column.title}
-                          <br />
-                          {date}
-                        </div>
-                      );
-                    }
-                  },
+                  if (index <= this.dateRangeSelected.length) {
+                    const date = this.dateRangeSelected[index - 1];
+                    return (
+                      <div>
+                        {column.title}
+                        <br />
+                        {date}
+                      </div>
+                    );
+                  }
+                },
           };
         });
         this.getUserSchedule();
@@ -537,9 +500,19 @@ export default {
     },
 
     async getUserSchedule() {
-      let url = `working-schedule?endDate=${this.datePicker.endDate}&startDate=${this.datePicker.startDate}`;
-      if (this.searchValue) {
-        url += `&employeeName=${this.searchValue}`;
+      const listSearchData = this.searchValue.split(';');
+      const employeeName = listSearchData[0];
+      const workPlaceId = listSearchData[1];
+      const headQuarterId = listSearchData[2];
+      let url = `working-schedule/?endDate=${this.datePicker.endDate}&startDate=${this.datePicker.startDate}`;
+      if (employeeName != "") {
+        url += `&employeeName=${employeeName}`;
+      }
+      if(workPlaceId && workPlaceId !== "undefined" && workPlaceId !== "All") {
+        url += `&workplace=${workPlaceId}`;
+      }
+      if(headQuarterId && headQuarterId !== "undefined" && headQuarterId !== "All") {
+        url += `&headquarter=${headQuarterId}`;
       }
       try {
         const res = await AdminService.getUserSchedule(url);
@@ -548,6 +521,12 @@ export default {
         console.error(error);
       }
     },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      return day + ' / ' + month;
+    }
   },
 };
 </script>
@@ -558,10 +537,12 @@ export default {
   gap: 6px;
   justify-content: flex-start;
 }
+
 .toolbar {
   display: flex;
   align-items: center;
 }
+
 .editable-cell {
   position: relative;
 }

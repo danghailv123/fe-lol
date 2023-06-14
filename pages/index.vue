@@ -25,27 +25,20 @@
             </div>
           </div>
           <a-button type="primary" @click="showModal"> Create Event </a-button>
-          <a-modal
-            width="600px"
-            v-model="visible"
-            title="Create Event"
-            :footer="null"
-          >
+          <a-modal width="600px" v-model="visible" title="Create Event" :footer="null">
             <a-form class="form-create" :form="form" @submit="handleSubmit">
               <a-form-item label="Title">
-                <a-input
-                  v-decorator="[
-                    'title',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please input your Title!',
-                        },
-                      ],
-                    },
-                  ]"
-                />
+                <a-input v-decorator="[
+                  'title',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your Title!',
+                      },
+                    ],
+                  },
+                ]" />
               </a-form-item>
               <a-form-item label="Description">
                 <a-input v-decorator="['description']" />
@@ -54,103 +47,73 @@
                 <a-date-picker v-decorator="['workDate', config]" />
               </a-form-item>
               <a-form-item label="Start Time">
-                <a-time-picker
-                  v-decorator="['startTime', config]"
-                  format="HH:mm"
-                />
+                <a-time-picker v-decorator="['startTime', config]" format="HH:mm" />
               </a-form-item>
               <a-form-item label="End Time">
-                <a-time-picker
-                  v-decorator="['endTime', config]"
-                  format="HH:mm"
-                />
+                <a-time-picker v-decorator="['endTime', config]" format="HH:mm" />
               </a-form-item>
               <a-form-item label="Shift">
-                <a-select
-                  v-decorator="[
-                    'shiftId',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please select shift!',
-                        },
-                      ],
-                    },
-                  ]"
-                >
-                  <a-select-option
-                    v-for="option in shiftOptions"
-                    :key="option.id"
-                    :value="option.id"
-                    >{{ option.name }}</a-select-option
-                  >
+                <a-select v-decorator="[
+                  'shiftId',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please select shift!',
+                      },
+                    ],
+                  },
+                ]">
+                  <a-select-option v-for="option in shiftOptions" :key="option.id" :value="option.id">{{ option.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
               <a-form-item label="Work Type">
-                <a-select
-                  v-decorator="[
-                    'workTypeId',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please select work type!',
-                        },
-                      ],
-                    },
-                  ]"
-                >
-                  <a-select-option
-                    v-for="option in workType"
-                    :key="option.id"
-                    :value="option.id"
-                    >{{ option.name }}</a-select-option
-                  >
+                <a-select v-decorator="[
+                  'workTypeId',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please select work type!',
+                      },
+                    ],
+                  },
+                ]">
+                  <a-select-option v-for="option in workType" :key="option.id" :value="option.id">{{ option.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
               <a-form-item label="Head Quarter">
-                <a-select
-                  v-decorator="[
-                    'headQuarterId',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please select head quarter!',
-                        },
-                      ],
-                    },
-                  ]"
-                >
-                  <a-select-option
-                    v-for="option in headQuarter"
-                    :key="option.id"
-                    :value="option.id"
-                    >{{ option.name }}</a-select-option
-                  >
+                <a-select v-decorator="[
+                  'headQuarterId',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please select head quarter!',
+                      },
+                    ],
+                  },
+                ]">
+                  <a-select-option v-for="option in headQuarter" :key="option.id" :value="option.id">{{ option.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
               <a-form-item label="Work Place">
-                <a-select
-                  v-decorator="[
-                    'workPlaceId',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please select work place!',
-                        },
-                      ],
-                    },
-                  ]"
-                >
-                  <a-select-option
-                    v-for="option in workPlace"
-                    :key="option.id"
-                    :value="option.id"
-                    >{{ option.name }}</a-select-option
-                  >
+                <a-select v-decorator="[
+                  'workPlaceId',
+                  {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please select work place!',
+                      },
+                    ],
+                  },
+                ]">
+                  <a-select-option v-for="option in workPlace" :key="option.id" :value="option.id">{{ option.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
               <a-form-item>
@@ -257,13 +220,16 @@ export default {
 .Leave {
   background-color: Purple;
 }
+
 .workday {
   .workday-title {
     font-size: 24px;
     margin-bottom: 8px;
   }
+
   .workday-box {
     margin-left: 16px;
+
     .status {
       display: flex;
       gap: 6px;
@@ -285,27 +251,34 @@ export default {
 .form-create {
   padding: 0 20px;
 }
+
 .mr-20 {
   margin-right: 10px;
 }
+
 .inf_all {
   margin-top: 20px;
 }
+
 .Name {
   margin: 5px 0;
   font-size: 18px;
   font-weight: 700;
 }
+
 .network {
   margin: 10px 0;
 }
+
 .fill-height {
   margin-top: 20px;
   margin-left: 20px;
 }
+
 .v-sheet {
   margin-bottom: 5px;
 }
+
 .v-toolbar__title {
   margin-left: 10px;
 }
