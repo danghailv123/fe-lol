@@ -202,7 +202,6 @@ export default {
       try {
         this.SignUp.birthDay = this.formattedDate(this.SignUp.birthDay);
         this.SignUp.headQuarterId = this.headQuarterId;
-        console.log(this.SignUp);
         const res = await PersonService.post(url, this.SignUp);
         if (res) {
           this.$message.success("success");

@@ -166,9 +166,9 @@ export default {
 
           if (this.SignUp.headQuarterId == 1) {
             this.headQuarterId = "Yokohama";
-          } else if (this.SignUp.sex == 2) {
+          } else if (this.SignUp.headQuarterId == 2) {
             this.headQuarterId = "Tokyo";
-          } else if (this.SignUp.sex == 3) {
+          } else if (this.SignUp.headQuarterId == 3) {
             this.headQuarterId = "Saporo";
           } else {
             this.headQuarterId = "Miyagi";
@@ -189,6 +189,7 @@ export default {
       const id = this.$route.params.id;
       const url = `info/update`;
       this.SignUp.birthDay = this.formattedDate(this.SignUp.birthDay);
+      this.SignUp.headQuarterId = this.headQuarterId;
       try {
         const res = await PersonService.post(url, this.SignUp);
         if (res) {

@@ -114,8 +114,7 @@ export default {
             event.preventDefault();
             try {
                 this.data.birthDay = this.formattedDate(this.data.birthDay);
-                this.data.headQuarterId = this.data.headQuarterId;
-                console.log(this.data);
+                this.data.headQuarterId = this.headQuarterId;
                 const res = await PersonService.post(
                     "info/update/",
                     this.data
