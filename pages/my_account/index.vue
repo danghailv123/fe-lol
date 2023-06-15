@@ -147,9 +147,9 @@ export default {
                     }
                     if(this.data.headQuarterId == 1) {
                         this.headQuarterId = "Yokohama";
-                    } else if(this.data.sex == 2) {
+                    } else if(this.data.headQuarterId == 2) {
                         this.headQuarterId = "Tokyo";
-                    } else if(this.data.sex == 3) {
+                    } else if(this.data.headQuarterId == 3) {
                         this.headQuarterId = "Saporo";
                     }else {
                         this.headQuarterId = "Miyagi";
