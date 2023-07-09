@@ -14,6 +14,11 @@
       <div class="tag-box" slot="monday" slot-scope="monday" key="monday">
         <a-tag v-for="tag in monday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -21,6 +26,11 @@
       <div class="tag-box" slot="tuesday" slot-scope="tuesday" key="tuesday">
         <a-tag v-for="tag in tuesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -28,6 +38,11 @@
       <div class="tag-box" slot="wednesday" slot-scope="wednesday" key="wednesday">
         <a-tag v-for="tag in wednesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -35,6 +50,11 @@
       <div class="tag-box" slot="thursday" slot-scope="thursday" key="thursday">
         <a-tag v-for="tag in thursday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -42,6 +62,11 @@
       <div class="tag-box" slot="friday" slot-scope="friday" key="friday">
         <a-tag v-for="tag in friday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -49,6 +74,11 @@
       <div class="tag-box" slot="saturday" slot-scope="saturday" key="saturday">
         <a-tag v-for="tag in saturday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -56,6 +86,11 @@
       <div class="tag-box" slot="sunday" slot-scope="sunday" key="sunday">
         <a-tag v-for="tag in sunday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
+            Title: {{ tag.title }} <br />
+            Description: {{ tag.description }} <br />
+            Head Quarter name: {{ tag.headQuarterName }} <br />
+            Work Place name: {{ tag.workPlaceName }} <br />
+            Shift name: {{ tag.shiftName }} <br />
             {{ `${tag.startTime} - ${tag.endTime}` }}
           </a-tooltip>
         </a-tag>
@@ -300,14 +335,14 @@ export default {
       headQuarter: [],
       workPlace: [],
       selectedEventId: null,
-    typeEdit: "",
+      typeEdit: "",
     };
   },
   beforeMount() {
     this.form = this.$form.createForm(this, { name: "register" });
-    if(window.location.href.includes('work')) {
+    if (window.location.href.includes('work')) {
       this.typeEdit = 2;
-    }else {
+    } else {
       this.typeEdit = 1;
     }
   },
@@ -514,10 +549,10 @@ export default {
       if (employeeName != "") {
         url += `&employeeName=${employeeName}`;
       }
-      if(workPlaceId && workPlaceId !== "undefined" && workPlaceId !== "All") {
+      if (workPlaceId && workPlaceId !== "undefined" && workPlaceId !== "All") {
         url += `&workplace=${workPlaceId}`;
       }
-      if(headQuarterId && headQuarterId !== "undefined" && headQuarterId !== "All") {
+      if (headQuarterId && headQuarterId !== "undefined" && headQuarterId !== "All") {
         url += `&headquarter=${headQuarterId}`;
       }
       try {

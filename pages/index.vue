@@ -109,6 +109,9 @@
             </a-form>
           </a-modal>
           <a-card style="margin-top: 30px;">
+            <div class="mb-4 mx-a">
+                <b-avatar variant="info" v-bind:src="data.link_image !== null ?  data.link_image : ''"></b-avatar>
+            </div>
             <p>Fullname: {{ data.fullName }}</p>
             <p>Birthday: {{ data.birthDay }}</p>
             <p>Address: {{ data.address }}</p>
