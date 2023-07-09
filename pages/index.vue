@@ -110,7 +110,7 @@
           </a-modal>
           <a-card style="margin-top: 30px;">
             <div class="mb-4 mx-a">
-                <b-avatar variant="info" v-bind:src="data.link_image !== null ?  data.link_image : ''"></b-avatar>
+              <b-avatar variant="info" v-bind:src="data.link_image !== null ? data.link_image : ''"></b-avatar>
             </div>
             <p>Fullname: {{ data.fullName }}</p>
             <p>Birthday: {{ data.birthDay }}</p>
@@ -190,7 +190,7 @@ export default {
           } else if (this.data.headQuarterId == 2) {
             this.headQuarterIdUser = "Tokyo";
           } else if (this.data.headQuarterId == 3) {
-            this.headQuarterIdUser = "Saporo";
+            this.headQuarterIdUser = "Sapporo";
           } else {
             this.headQuarterIdUser = "Miyagi";
           }
@@ -224,16 +224,31 @@ export default {
           this.dataCreate = fromCreate;
         }
       });
-      const headQuarterId = this.headQuarter.find((item) => {
-        return item.name == this.headQuarterIdUser
-      });
-      const workPlaceId = this.workPlace.find((item) => {
-        return item.name == this.dataCreate.workPlaceId
-      });
-      this.dataCreate.headQuarterId = headQuarterId.id
-      if(workPlaceId) {
-        this.dataCreate.workPlaceId = workPlaceId.id
+      let headQuarterId
+      if (parseInt(this.headQuarterIdUser)) {
+        headQuarterId = this.headQuarter.find((item) => {
+          return item.id == this.headQuarterIdUser
+        });
+      } else {
+        console.log(this.headQuarter);
+        console.log(this.headQuarterIdUser);
+        headQuarterId = this.headQuarter.find((item) => {
+          return item.name == this.headQuarterIdUser
+        });
       }
+      let workPlaceId
+      if (parseInt(this.dataCreate.workPlaceId)) {
+        workPlaceId = this.workPlace.find((item) => {
+          return item.id == this.dataCreate.workPlaceId
+        });
+      } else {
+        workPlaceId = this.workPlace.find((item) => {
+          return item.name == this.dataCreate.workPlaceId
+        });
+      }
+      console.log(workPlaceId);
+      this.dataCreate.headQuarterId = headQuarterId.id
+      this.dataCreate.workPlaceId = workPlaceId.id
       try {
         if (this.dataCreate.workDate >= today()) {
           const res = await PersonService.post(
