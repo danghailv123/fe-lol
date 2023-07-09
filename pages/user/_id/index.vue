@@ -3,6 +3,12 @@
     <div class="title">Edit Information</div>
     <div class="container form2">
       <b-form @submit="submitSignUp" class="form">
+        <div class="mb-4 mx-a">
+                <b-avatar variant="info" v-bind:src="SignUp.link_image !== null ?  SignUp.link_image : ''"></b-avatar>
+            </div>
+            <b-form-group id="input-group-1" label="Avatar :" label-for="input-1">
+                <b-form-input id="input-1" v-model="SignUp.link_image" type="text" placeholder="Enter "></b-form-input>
+            </b-form-group>
         <b-form-group id="input-group-1" label="FullName :" label-for="input-1">
           <b-form-input
             id="input-1"
@@ -53,12 +59,12 @@
             v-model="SignUp.email"
             type="email"
             placeholder="Enter "
-            required
+            required 
+            readonly
           ></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-1" label="Password :" label-for="input-1">
-          <b-form-input readonly id="input-1" v-model="pass" type="password" placeholder="Enter "
-                    required></b-form-input>
+          <b-form-input id="input-1" v-model="password" type="password" placeholder="Enter "></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-1" label="Role :" label-for="input-1">
                 <a-select v-model="role">
@@ -106,7 +112,6 @@ import PersonService from "~/services/api/personService.js";
 export default {
   data() {
     return {
-      pass: "123456",
       SignUp: {
         address: "",
         birthDay: "",
@@ -117,12 +122,14 @@ export default {
         phoneNumber: "",
         role: 1,
         sex: 0,
-        headQuarterId: null
+        image: "",
+        headQuarterId: null,
       },
       headQuarter: [],
       headQuarterId: "",
       sex: "",
       role: "",
+      password: ""
     };
   },
   fetch() {
@@ -150,6 +157,7 @@ export default {
         const res = await PersonService.get(url);
         if (res) {
           this.SignUp = res.data.data;
+          // console.log(this.SignUp);
           if (this.SignUp.sex == 1) {
             this.sex = "Man";
           } else if (this.SignUp.sex == 0) {
@@ -189,7 +197,23 @@ export default {
       const id = this.$route.params.id;
       const url = `info/update`;
       this.SignUp.birthDay = this.formattedDate(this.SignUp.birthDay);
-      this.SignUp.headQuarterId = this.headQuarterId;
+      if (this.password !== "") {
+        this.SignUp.password = this.password;
+      } else {
+        this.SignUp.password = "";
+      }
+      let headQuarterId;
+      if(parseInt(this.headQuarterId)) {
+        headQuarterId = this.headQuarter.find((item) => {
+          return item.id == this.headQuarterId
+        });
+      }else {
+        headQuarterId = this.headQuarter.find((item) => {
+          return item.name == this.headQuarterId
+        });
+      }
+      // console.log(this.headQuarterId);
+      this.SignUp.headQuarterId = headQuarterId.id
       try {
         const res = await PersonService.post(url, this.SignUp);
         if (res) {

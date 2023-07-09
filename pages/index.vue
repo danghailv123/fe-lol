@@ -69,7 +69,7 @@
                 </a-select>
               </a-form-item>
               <a-form-item label="Work Type">
-                <a-select v-decorator="[
+                <a-select @change="handleChangeWorkType" v-decorator="[
                   'workTypeId',
                   {
                     rules: [
@@ -85,23 +85,10 @@
                 </a-select>
               </a-form-item>
               <a-form-item label="Head Quarter">
-                <a-select v-decorator="[
-                  'headQuarterId',
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Please select head quarter!',
-                      },
-                    ],
-                  },
-                ]">
-                  <a-select-option v-for="option in headQuarter" :key="option.id" :value="option.id">{{ option.name
-                  }}</a-select-option>
-                </a-select>
+                <a-input style="pointer-events: none;" readOnly v-model='headQuarterIdUser' />
               </a-form-item>
               <a-form-item label="Work Place">
-                <a-select v-decorator="[
+                <a-select v-bind:class="(disableWorkPlace) ? 'disable' : ''" v-decorator="[
                   'workPlaceId',
                   {
                     rules: [
@@ -121,6 +108,16 @@
               </a-form-item>
             </a-form>
           </a-modal>
+          <a-card style="margin-top: 30px;">
+            <p>Fullname: {{ data.fullName }}</p>
+            <p>Birthday: {{ data.birthDay }}</p>
+            <p>Address: {{ data.address }}</p>
+            <p>Phone number: {{ data.phoneNumber }}</p>
+            <p>Role: {{ role }}</p>
+            <p>Head Quarter: {{ headQuarterIdUser }}</p>
+            <p>Sex: {{ sex }}</p>
+            <p>Description: {{ data.description }}</p>
+          </a-card>
         </div>
       </div>
     </v-col>
@@ -152,6 +149,11 @@ export default {
     workPlace: [],
     dataCreate: {},
     visible: false,
+    data: {},
+    sex: "",
+    headQuarterIdUser: "",
+    role: "",
+    disableWorkPlace: true
   }),
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: "register" });
@@ -161,8 +163,47 @@ export default {
     this.workType = JSON.parse(localStorage.getItem("workType"));
     this.headQuarter = JSON.parse(localStorage.getItem("headQuarter"));
     this.workPlace = JSON.parse(localStorage.getItem("workPlace"));
+    const getUser = async (param) => {
+      const idUser = localStorage.getItem('idUser')
+      const url = `info/detail/${idUser}`;
+      try {
+        const res = await PersonService.get(url);
+        if (res) {
+          this.data = res.data.data;
+          if (this.data.sex == 1) {
+            this.sex = "Man";
+          } else if (this.data.sex == 0) {
+            this.sex = "Girl";
+          } else {
+            this.sex = "Unknown";
+          }
+          if (this.data.role == 1) {
+            this.role = "User";
+          } else if (this.data.role == 2) {
+            this.role = "Admin";
+          }
+          if (this.data.headQuarterId == 1) {
+            this.headQuarterIdUser = "Yokohama";
+          } else if (this.data.headQuarterId == 2) {
+            this.headQuarterIdUser = "Tokyo";
+          } else if (this.data.headQuarterId == 3) {
+            this.headQuarterIdUser = "Saporo";
+          } else {
+            this.headQuarterIdUser = "Miyagi";
+          }
+          this.form.getFieldDecorator('workPlaceId', { initialValue: this.headQuarterIdUser });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getUser();
   },
-
+  fetch() {
+    Promise.all([
+      this.getHeadQuaters(),
+    ]);
+  },
   methods: {
     showModal() {
       this.visible = true;
@@ -180,6 +221,16 @@ export default {
           this.dataCreate = fromCreate;
         }
       });
+      const headQuarterId = this.headQuarter.find((item) => {
+        return item.name == this.headQuarterIdUser
+      });
+      const workPlaceId = this.workPlace.find((item) => {
+        return item.name == this.dataCreate.workPlaceId
+      });
+      this.dataCreate.headQuarterId = headQuarterId.id
+      if(workPlaceId) {
+        this.dataCreate.workPlaceId = workPlaceId.id
+      }
       try {
         if (this.dataCreate.workDate >= today()) {
           const res = await PersonService.post(
@@ -201,6 +252,27 @@ export default {
         console.log(error);
       }
     },
+    async getHeadQuaters() {
+      try {
+        const res = await PersonService.get(
+          "user/working-schedule/get-headquarters"
+        );
+        this.headQuarter = res.data.data;
+        localStorage.setItem("headQuarter", JSON.stringify(this.headQuarter));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleChangeWorkType(e) {
+      if (e == 3) {
+        this.disableWorkPlace = false;
+      } else {
+        this.disableWorkPlace = true;
+        this.form.setFieldsValue({
+          ['workPlaceId']: this.headQuarterIdUser
+        });
+      }
+    }
   },
 };
 </script>
@@ -281,5 +353,9 @@ export default {
 
 .v-toolbar__title {
   margin-left: 10px;
+}
+
+.disable {
+  pointer-events: none;
 }
 </style>

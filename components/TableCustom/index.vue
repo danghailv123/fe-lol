@@ -300,10 +300,16 @@ export default {
       headQuarter: [],
       workPlace: [],
       selectedEventId: null,
+    typeEdit: "",
     };
   },
   beforeMount() {
     this.form = this.$form.createForm(this, { name: "register" });
+    if(window.location.href.includes('work')) {
+      this.typeEdit = 2;
+    }else {
+      this.typeEdit = 1;
+    }
   },
   watch: {
     datePicker: {
@@ -399,7 +405,7 @@ export default {
       this.selectedEventId = tag.id;
       try {
         const res = await PersonService.get(
-          `/user/working-schedule/detail?scheduleId=${tag.id}`
+          `/user/working-schedule/detail/${this.typeEdit}?scheduleId=${tag.id}`
         );
         if (res.status === 200) {
           const data = res.data.data;
@@ -422,7 +428,7 @@ export default {
     },
     async handleDeleteEvent() {
       const res = await PersonService.delete(
-        `user/working-schedule/delete?scheduleId=${this.selectedEventId}`
+        `user/working-schedule/delete/${this.typeEdit}?scheduleId=${this.selectedEventId}`
       );
       if (res.data.code === 200) {
         alert("Delete was successfully!");
@@ -445,7 +451,7 @@ export default {
 
       try {
         const res = await PersonService.put(
-          "user/working-schedule/update",
+          `user/working-schedule/update/${this.typeEdit}`,
           payload
         );
         if (res.data.code === 200) {

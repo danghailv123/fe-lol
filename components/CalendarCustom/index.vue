@@ -37,10 +37,14 @@
       <v-sheet class="calendar-main">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :weekdays="weekdays"
           :weekday-format="getDay" :event-color="getEventColor" :type="type" :locale-first-day-of-year="1"
-          @click:event="showEvent" @click:date="viewDay" @click:more="viewDay">
+          @click:event="showEvent" @click:date="viewDay" @click:more="viewDay" :event-height="50">
           <template v-slot:event="{ event }">
-            <b-badge v-b-tooltip.hover.topLeft :title="event.name">{{ formatAMPM(event.start) }} - {{
-              formatAMPM(event.end) }}</b-badge>
+            <b-badge v-b-tooltip.hover.topLeft style="text-align: left;">
+              Title: {{ event.detailSchedule.title }} <br />
+              Description: {{ event.detailSchedule.description }} <br />
+              Work Type: {{ event.workType }} <br />
+              Work Place: {{ event.workPlace }} <br />
+              {{ formatAMPM(event.start) }} - {{ formatAMPM(event.end) }}</b-badge>
           </template>
         </v-calendar>
         <!-- modal events -->
@@ -110,7 +114,7 @@
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Work Type" style="width: 100%">
-                      <a-select v-decorator="[
+                      <a-select @change="handleChangeWorkType" v-decorator="[
                         'workTypeId',
                         {
                           rules: [
@@ -126,7 +130,7 @@
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Head Quarter" style="width: 100%">
-                      <a-select v-decorator="[
+                      <a-select style="pointer-events: none;" v-decorator="[
                         'headQuarterId',
                         {
                           rules: [
@@ -142,7 +146,7 @@
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Work Place" style="width: 100%">
-                      <a-select v-decorator="[
+                      <a-select v-bind:class="(disableWorkPlace) ? 'disable' : ''" v-decorator="[
                         'workPlaceId',
                         {
                           rules: [
@@ -214,10 +218,42 @@ export default {
     },
     currentMonth: new Date().getMonth(),
     form: {},
+    disableWorkPlace: true,
+    headQuarterIdUser: "",
+    typeEdit: "",
   }),
   beforeMount() {
     this.getFirstDateAndLastDate();
     this.form = this.$form.createForm(this, { name: "register" });
+    if(window.location.href.includes('work')) {
+      this.typeEdit = 2;
+    }else {
+      this.typeEdit = 1;
+    }
+  },
+  mounted() {
+    const getUser = async (param) => {
+      const idUser = localStorage.getItem('idUser')
+      const url = `info/detail/${idUser}`;
+      try {
+        const res = await PersonService.get(url);
+        if (res) {
+          this.data = res.data.data;
+          if (this.data.headQuarterId == 1) {
+            this.headQuarterIdUser = "Yokohama";
+          } else if (this.data.headQuarterId == 2) {
+            this.headQuarterIdUser = "Tokyo";
+          } else if (this.data.headQuarterId == 3) {
+            this.headQuarterIdUser = "Saporo";
+          } else {
+            this.headQuarterIdUser = "Miyagi";
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getUser();
   },
   fetch() {
     Promise.all([
@@ -264,10 +300,16 @@ export default {
           };
         }
       });
-
+      const workPlaceId = this.workPlace.find((item) => {
+        return item.name == payload.workPlaceId
+      });
+      if(workPlaceId) {
+        payload.workPlaceId = workPlaceId.id
+      }
+      // console.log(payload);
       try {
         const res = await PersonService.put(
-          "user/working-schedule/update",
+          `user/working-schedule/update/${this.typeEdit}`,
           payload
         );
         if (res.data.code === 200) {
@@ -293,7 +335,7 @@ export default {
     },
     async handleDeleteEvent() {
       const res = await PersonService.delete(
-        `user/working-schedule/delete?scheduleId=${this.selectedEvent.scheduleId}`
+        `user/working-schedule/delete/${this.typeEdit}?scheduleId=${this.selectedEvent.scheduleId}`
       );
       if (res.data.code === 200) {
         alert("Delete was successfully!");
@@ -308,7 +350,30 @@ export default {
       const url = `user/working-schedule/?endDate=${this.dateRange.endDate}&startDate=${this.dateRange.startDate}`;
       try {
         const res = await PersonService.get(url);
-        this.events = res.data.data;
+        const listData = res.data.data;
+        for (let i = 0; i < listData.length; i++) {
+          const resDetail = await PersonService.get(
+            `/user/working-schedule/detail/${this.typeEdit}?scheduleId=${listData[i].scheduleId}`
+          );
+          if (resDetail.status === 200) {
+            const dataDetail = resDetail.data.data;
+            listData[i].detailSchedule = dataDetail;
+            const workType = this.workType.find((item) => {
+              return item.id == dataDetail.workTypeId
+            });
+            const headQuarter = this.headQuarter.find((item) => {
+              return item.id == dataDetail.headQuarterId
+            });
+            const workPlace = this.workPlace.find((item) => {
+              return item.id == dataDetail.workPlaceId
+            });
+            listData[i].workType = workType.name;
+            listData[i].headQuarter = headQuarter.name;
+            listData[i].workPlace = workPlace.name;
+          }
+        }
+        this.events = listData;
+        console.log(this.events);
       } catch (error) {
         console.log(error);
       }
@@ -385,7 +450,7 @@ export default {
       const open = async () => {
         try {
           const res = await PersonService.get(
-            `/user/working-schedule/detail?scheduleId=${event.scheduleId}`
+            `/user/working-schedule/detail/${this.typeEdit}?scheduleId=${event.scheduleId}`
           );
 
           if (res.status === 200) {
@@ -402,6 +467,15 @@ export default {
               headQuarterId: data.headQuarterId,
               workPlaceId: data.workPlaceId,
             });
+            if (data.workTypeId == 3) {
+              this.disableWorkPlace = false;
+            } else {
+              this.disableWorkPlace = true;
+              const headQuarterId = this.headQuarter.find((item) => {
+                return item.name == this.headQuarterIdUser
+              });
+              this.form.getFieldDecorator('workPlaceId', { initialValue: headQuarterId.name });
+            }
           }
         } catch (error) {
           console.log(error);
@@ -432,8 +506,17 @@ export default {
       minutes = minutes < 10 ? '0' + minutes : minutes;
       const strTime = hours + ':' + minutes + ' ' + ampm;
       return strTime;
+    },
+    handleChangeWorkType(e) {
+      if (e == 3) {
+        this.disableWorkPlace = false;
+      } else {
+        this.disableWorkPlace = true;
+        this.form.setFieldsValue({
+          ['workPlaceId']: this.headQuarterIdUser
+        });
+      }
     }
-
   },
 };
 </script>
@@ -462,5 +545,9 @@ export default {
 
 .ant-modal-body {
   padding: 0 !important;
+}
+
+.disable {
+  pointer-events: none;
 }
 </style>

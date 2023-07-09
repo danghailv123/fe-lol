@@ -1,6 +1,9 @@
 <template>
     <div class="container">
         <b-form @submit="submitSignUp" class="formSignUp">
+            <div class="mb-4 mx-a">
+                <b-avatar variant="info" v-bind:src="data.link_image !== null ?  data.link_image : ''"></b-avatar>
+            </div>
             <b-form-group id="input-group-1" label="FullName :" label-for="input-1">
                 <b-form-input id="input-1" v-model="data.fullName" type="text" placeholder="Enter " required></b-form-input>
             </b-form-group>
@@ -19,20 +22,19 @@
             </b-form-group>
 
             <b-form-group id="input-group-1" label="Email :" label-for="input-1">
-                <b-form-input id="input-1" v-model="data.email" type="email" placeholder="Enter " required></b-form-input>
+                <b-form-input id="input-1" v-model="data.email" type="email" placeholder="Enter " required readonly></b-form-input>
             </b-form-group>
             <b-form-group id="input-group-1" label="Password :" label-for="input-1">
-                <b-form-input readonly id="input-1" v-model="pass" type="password" placeholder="Enter "
-                    required></b-form-input>
+                <b-form-input id="input-1" v-model="password" type="password" placeholder="Enter password"></b-form-input>
             </b-form-group>
             <b-form-group id="input-group-1" label="Role :" label-for="input-1">
-                <a-select v-model="role">
+                <a-select v-model="role" readonly style="pointer-events: none;">
                     <a-select-option value="1"> User </a-select-option>
                     <a-select-option value="2"> Admin </a-select-option>
                 </a-select>
             </b-form-group>
             <b-form-group id="input-group-1" label="Head Quater" style="width: 100%">
-                <a-select v-model="headQuarterId">
+                <a-select v-model="headQuarterId" readonly style="pointer-events: none;">
                     <a-select-option value="1"> Yokohama </a-select-option>
                     <a-select-option value="2"> Tokyo </a-select-option>
                     <a-select-option value="3">Saporo</a-select-option>
@@ -81,7 +83,8 @@ export default {
             sex: "",
             headQuarterId: "",
             role: "",
-            form: {}
+            form: {},
+            password: ""
         };
     },
     beforeMount() {
@@ -114,7 +117,14 @@ export default {
             event.preventDefault();
             try {
                 this.data.birthDay = this.formattedDate(this.data.birthDay);
-                this.data.headQuarterId = this.headQuarterId;
+                // this.data.headQuarterId = this.data.headQuarterId;
+                console.log(this.data);
+                if(this.password !== "") {
+                    this.data.password = this.password;
+                }else {
+                    this.data.password = "";
+                }
+                // console.log(this.data);
                 const res = await PersonService.post(
                     "info/update/",
                     this.data
@@ -133,6 +143,7 @@ export default {
                 const res = await PersonService.get(url);
                 if (res) {
                     this.data = res.data.data;
+                    // console.log(this.data);
                     if (this.data.sex == 1) {
                         this.sex = "Man";
                     } else if (this.data.sex == 0) {
@@ -154,6 +165,7 @@ export default {
                     }else {
                         this.headQuarterId = "Miyagi";
                     }
+                    // console.log(this.data);
                 }
             } catch (error) {
                 console.log(error);

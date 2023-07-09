@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <div class="form2">
+    <div class="mx-a text-center">
+      <img src="../../static/logoUB.png" alt="logo" width="170" height="170">
+    </div>
+    <div class="form2 mt-5">
       <b-form @submit="onSubmit" v-if="show" class="form">
         <b-form-group id="input-group-1" label="Email :" label-for="input-1">
           <b-form-input
@@ -69,6 +72,7 @@ export default {
         );
         window.location.reload();
       } catch (error) {
+        alert('Username or password not match!!!');
         console.error(error);
       }
     },
