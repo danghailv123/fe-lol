@@ -76,7 +76,7 @@
                 <a-select v-model="headQuarterId">
                     <a-select-option value="1"> Yokohama </a-select-option>
                     <a-select-option value="2"> Tokyo </a-select-option>
-                    <a-select-option value="3">Saporo</a-select-option>
+                    <a-select-option value="3">Sapporo</a-select-option>
                     <a-select-option value="4">Miyagi</a-select-option>
                 </a-select>
             </b-form-group>
@@ -177,7 +177,7 @@ export default {
           } else if (this.SignUp.headQuarterId == 2) {
             this.headQuarterId = "Tokyo";
           } else if (this.SignUp.headQuarterId == 3) {
-            this.headQuarterId = "Saporo";
+            this.headQuarterId = "Sapporo";
           } else {
             this.headQuarterId = "Miyagi";
           }

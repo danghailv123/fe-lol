@@ -244,7 +244,7 @@ export default {
           } else if (this.data.headQuarterId == 2) {
             this.headQuarterIdUser = "Tokyo";
           } else if (this.data.headQuarterId == 3) {
-            this.headQuarterIdUser = "Saporo";
+            this.headQuarterIdUser = "Sapporo";
           } else {
             this.headQuarterIdUser = "Miyagi";
           }

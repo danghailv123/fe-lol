@@ -161,7 +161,7 @@ export default {
                     } else if(this.data.headQuarterId == 2) {
                         this.headQuarterId = "Tokyo";
                     } else if(this.data.headQuarterId == 3) {
-                        this.headQuarterId = "Saporo";
+                        this.headQuarterId = "Sapporo";
                     }else {
                         this.headQuarterId = "Miyagi";
                     }
