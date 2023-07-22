@@ -1,16 +1,42 @@
 <template>
   <div>
     <div class="toolbar">
+      <a-week-picker class="ma-2" :locale="locale" :allowClear="true" @change="onChange" style="font-size: 20px;" />
       <div v-if="this.datePicker.startDate" class="date-range">
-        <span>{{ this.datePicker.startDate }}</span>
+        <span style="font-size: 20px;">{{ this.datePicker.startDate }}</span>
         -
-        <span>{{ this.datePicker.endDate }}</span>
+        <span style="font-size: 20px;">{{ this.datePicker.endDate }}</span>
       </div>
       <v-spacer></v-spacer>
-      <nuxt-link to="/work" class="toolbar-link" style="color: rgba(0, 0, 0, 0.87);">
-          View by Day or Month
-        </nuxt-link>
-      <a-week-picker class="ma-2" :locale="locale" :allowClear="true" @change="onChange" />
+      <v-menu bottom right>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+            <span>{{ typeToLabel[type] }}</span>
+            <v-icon right> mdi-menu-down </v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>
+              <nuxt-link to="/work" class="toolbar-link" style="color: rgba(0, 0, 0, 0.87);">
+                Day
+              </nuxt-link>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <nuxt-link to="/work" class="toolbar-link" style="color: rgba(0, 0, 0, 0.87);">
+                Month
+              </nuxt-link>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+                Week
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
     <!-- -------------------table----------------------- -->
     <a-table bordered :data-source="dataSource" :columns="columns" :pagination="false">
@@ -18,10 +44,10 @@
         <a-tag v-for="tag in monday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
             Title: {{ tag.title }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -29,10 +55,10 @@
         <a-tag v-for="tag in tuesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -40,10 +66,10 @@
         <a-tag v-for="tag in wednesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -51,10 +77,10 @@
         <a-tag v-for="tag in thursday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -62,10 +88,10 @@
         <a-tag v-for="tag in friday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -73,10 +99,10 @@
         <a-tag v-for="tag in saturday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -84,10 +110,10 @@
         <a-tag v-for="tag in sunday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
              Title: {{ tag.title }} <br />
+             {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}<br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Work Type: {{ tag.workTypeName }} <br />
-            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
+            Work Type: {{ tag.workTypeName }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -236,6 +262,12 @@ export default {
         },
         firstDayOfWeek: 1, // 1 đại diện cho thứ 2
       },
+    type: "week",
+      typeToLabel: {
+      month: "Month",
+      day: "Day",
+      week: "Week",
+    },
       dataSource: [],
       columns: [
         {
@@ -636,5 +668,8 @@ export default {
 
 .editable-add-btn {
   margin-bottom: 8px;
+}
+.ant-calendar-picker-input.ant-input {
+  font-size: 20px;
 }
 </style>
