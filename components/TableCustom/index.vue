@@ -541,11 +541,12 @@ export default {
     },
 
     async getUserSchedule() {
+      let url = `working-schedule/?endDate=${this.datePicker.endDate}&startDate=${this.datePicker.startDate}`;
       const listSearchData = this.searchValue.split(';');
       const employeeName = listSearchData[0];
       const workPlaceId = listSearchData[1];
       const headQuarterId = listSearchData[2];
-      let url = `working-schedule/?endDate=${this.datePicker.endDate}&startDate=${this.datePicker.startDate}`;
+      const workTypeId = listSearchData[3];
       if (employeeName != "") {
         url += `&employeeName=${employeeName}`;
       }
@@ -554,6 +555,9 @@ export default {
       }
       if (headQuarterId && headQuarterId !== "undefined" && headQuarterId !== "All") {
         url += `&headquarter=${headQuarterId}`;
+      }
+      if (workTypeId && workTypeId !== "undefined" && workTypeId !== "All") {
+        url += `&workTypeId=${workTypeId}`;
       }
       try {
         const res = await AdminService.getUserSchedule(url);

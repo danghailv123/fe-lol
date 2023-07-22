@@ -43,8 +43,8 @@
           @click:event="showEvent" @click:date="viewDay" @click:more="viewDay" :event-height="50">
           <template v-slot:event="{ event }">
             <b-badge v-b-tooltip.hover.topLeft style="text-align: left;">
-              {{ event.detailSchedule.title }} <br />
-              {{ formatAMPM(event.start) }} - {{ formatAMPM(event.end) }}<br/>
+              {{ event.nameUser + " " + formatAMPM(event.start) + " - " + formatAMPM(event.end) }} <br />
+              Headquater: {{ event.headQuarter }} <br />
               Work Type: {{ event.workType }} <br />
               Work Place: {{ event.workPlace }}
             </b-badge>
@@ -180,10 +180,16 @@
 
 <script>
 import PersonService from "../../services/api/personService";
+import AdminService from "../../services/api/adminService";
 
 export default {
-  name: "CalendarCustom",
-  props: ['keyword'],
+  name: "CalendarWorkList",
+  props: {
+    searchValue: {
+      type: String,
+      default: "",
+    },
+  },
   data: () => ({
     focus: "",
     type: "month",
@@ -263,10 +269,10 @@ export default {
     ]);
   },
   watch: {
-    searchData: {
-      handler(val, oldVal) {
-        // do your stuff
-      }
+    searchValue: {
+      handler() {
+        this.getListEvents();
+      },
     },
     keyword: {
       handler(val, oldVal) {
@@ -345,33 +351,68 @@ export default {
     },
 
     async getListEvents() {
-      const url = `user/working-schedule/?endDate=${this.dateRange.endDate}&startDate=${this.dateRange.startDate}`;
+      let url = `working-schedule/?endDate=${this.dateRange.endDate}&startDate=${this.dateRange.startDate}`;
+      // const urlUser = `user/working-schedule/?endDate=${this.dateRange.endDate}&startDate=${this.dateRange.startDate}`;
+      const listSearchData = this.searchValue.split(';');
+      const employeeName = listSearchData[0];
+      const workPlaceId = listSearchData[1];
+      const headQuarterId = listSearchData[2];
+      const workTypeId = listSearchData[3];
+      if (employeeName != "") {
+        url += `&employeeName=${employeeName}`;
+      }
+      if (workPlaceId && workPlaceId !== "undefined" && workPlaceId !== "All") {
+        url += `&workplace=${workPlaceId}`;
+      }
+      if (headQuarterId && headQuarterId !== "undefined" && headQuarterId !== "All") {
+        url += `&headquarter=${headQuarterId}`;
+      }
+      if (workTypeId && workTypeId !== "undefined" && workTypeId !== "All") {
+        url += `&workTypeId=${workTypeId}`;
+      }
       try {
-        const res = await PersonService.get(url);
-        const listData = res.data.data;
-        for (let i = 0; i < listData.length; i++) {
-          const resDetail = await PersonService.get(
-            `/user/working-schedule/detail/${this.typeEdit}?scheduleId=${listData[i].scheduleId}`
-          );
-          if (resDetail.status === 200) {
-            const dataDetail = resDetail.data.data;
-            listData[i].detailSchedule = dataDetail;
-            const workType = this.workType.find((item) => {
-              return item.id == dataDetail.workTypeId
-            });
-            const headQuarter = this.headQuarter.find((item) => {
-              return item.id == dataDetail.headQuarterId
-            });
-            const workPlace = this.workPlace.find((item) => {
-              return item.id == dataDetail.workPlaceId
-            });
-            listData[i].workType = workType.name;
-            listData[i].headQuarter = headQuarter.name;
-            listData[i].workPlace = workPlace.name;
+        const res = await AdminService.getUserSchedule(url);
+        // const resUser = await PersonService.get(urlUser);
+        const listAdmin = res.data.data.content;
+        // const listUser = resUser.data.data;
+        // resUser.data.data
+        const listEvent = [];
+        listAdmin.forEach((item)=> {
+          for (const key in item) {
+            if(key.includes('day') && item[key].length > 0){
+              item[key].forEach((eventOnDay)=> {
+                let colorEvent = "Green";
+                if (eventOnDay.workTypeName === "Work At Company") {
+                  colorEvent = "Red";
+                }
+                if (eventOnDay.workTypeName === "Go On Bussiness") {
+                  colorEvent = "#2196F3";
+                }
+                if (eventOnDay.workTypeName === "Work at Home") {
+                  colorEvent = "Green";
+                }
+                if (eventOnDay.workTypeName === "Leave") {
+                  colorEvent = "Purple";
+                }
+                listEvent.push({
+                  title: eventOnDay.title,
+                  scheduleId: eventOnDay.id,
+                  name: eventOnDay.title,
+                  start: eventOnDay.startTime,
+                  end: eventOnDay.endTime,
+                  color: colorEvent,
+                  timed: true,
+                  isCanEdit: false,
+                  workType: eventOnDay.workTypeName,
+                  headQuarter: eventOnDay.headQuarterName,
+                  workPlace: eventOnDay.workPlaceName,
+                  nameUser: item.name
+                })
+              })
+            }
           }
-        }
-        this.events = listData;
-        console.log(this.events);
+        });
+        this.events = listEvent
       } catch (error) {
         console.log(error);
       }

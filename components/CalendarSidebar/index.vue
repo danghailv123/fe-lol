@@ -42,7 +42,7 @@
         </a-select>
       </a-form-item>
       <a-form-item label="Work Place" style="width: 100%">
-        <a-select style="width: 100%;" 
+        <a-select style="width: 100%;"
         v-model="workPlaceId"
         v-decorator="[
           'workPlaceId',
@@ -56,6 +56,24 @@
           },
         ]">
           <a-select-option v-for="option in workPlace" :key="option.id" :value="option.id">{{ option.name
+          }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="Work Type" style="width: 100%">
+        <a-select style="width: 100%;"
+        v-model="workTypeId"
+        v-decorator="[
+          'workTypeId',
+          {
+            rules: [
+              {
+                required: true,
+                message: 'Please select work type!',
+              },
+            ],
+          },
+        ]">
+          <a-select-option v-for="option in workType" :key="option.id" :value="option.id">{{ option.name
           }}</a-select-option>
         </a-select>
       </a-form-item>
@@ -78,20 +96,24 @@ export default {
     loading: false,
     headQuarterId: "All",
     workPlaceId: "All",
+    workTypeId: "All",
     headQuarter: [],
     workPlace: [],
+    workType: [],
   }),
   fetch() {
     Promise.all([
       this.getHeadQuaters(),
       this.getWorkPlaces(),
+      this.getWorkTypes(),
     ]);
   },
   methods: {
     onSearch(value) {
       const workPlaceId = this.workPlace.find((item) => item.id == this.workPlaceId)
-      const headQuarterId = this.workPlace.find((item) => item.id == this.headQuarterId)
-      const dataSearch = value+';'+(workPlaceId !== null ? workPlaceId?.name : 'all') + ';'+(headQuarterId !== null ? headQuarterId?.name : 'all');
+      const headQuarterId = this.headQuarter.find((item) => item.id == this.headQuarterId)
+      const workTypeId = this.workType.find((item) => item.id == this.workTypeId)
+      const dataSearch = value+';'+(workPlaceId !== null ? workPlaceId?.name : 'all') + ';'+(headQuarterId !== null ? headQuarterId?.name : 'all')+ ';'+(workTypeId !== null ? workTypeId?.name : 'all');
       this.$emit("searchValue", dataSearch);
     },
     updateValue(event){
@@ -127,6 +149,17 @@ export default {
         this.workPlace = res.data.data;
         localStorage.setItem("workPlace",JSON.stringify(this.workPlace));
       }catch(error){
+        console.log(error);
+      }
+    },
+    async getWorkTypes() {
+      try {
+        const res = await PersonService.get(
+          "user/working-schedule/get-worktypes"
+        );
+        this.workType = res.data.data;
+        localStorage.setItem("workType", JSON.stringify(this.workType));
+      } catch (error) {
         console.log(error);
       }
     },
