@@ -157,7 +157,12 @@ export default {
         const res = await PersonService.get(
           "user/working-schedule/get-worktypes"
         );
-        this.workType = res.data.data;
+        const listWorkType = res.data.data;
+        listWorkType.unshift({
+          id: listWorkType.length + 1,
+          name: "All"
+        })
+        this.workType = listWorkType;
         localStorage.setItem("workType", JSON.stringify(this.workType));
       } catch (error) {
         console.log(error);

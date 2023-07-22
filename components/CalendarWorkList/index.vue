@@ -30,8 +30,12 @@
               <v-list-item @click="type = 'month'">
                 <v-list-item-title>Month</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
+              <v-list-item>
+                <v-list-item-title>
+                  <nuxt-link to="/weeklist" class="toolbar-link" style="color: rgba(0, 0, 0, 0.87);">
+                    Week
+                  </nuxt-link>
+                </v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -40,10 +44,10 @@
       <v-sheet class="calendar-main">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :weekdays="weekdays"
           :weekday-format="getDay" :event-color="getEventColor" :type="type" :locale-first-day-of-year="1"
-          @click:event="showEvent" @click:date="viewDay" @click:more="viewDay" :event-height="50">
+          @click:event="showEvent" @click:date="viewDay" @click:more="viewDay" :event-height="50" :interval-height="80">
           <template v-slot:event="{ event }">
             <b-badge v-b-tooltip.hover.topLeft style="text-align: left;">
-              {{ event.nameUser + " " + formatAMPM(event.start) + " - " + formatAMPM(event.end) }} <br />
+              {{ event.nameUser + " | " + formatAMPM(event.start) + " - " + formatAMPM(event.end) }} <br />
               Headquater: {{ event.headQuarter }} <br />
               Work Type: {{ event.workType }} <br />
               Work Place: {{ event.workPlace }}
@@ -143,7 +147,7 @@
                       </a-select>
                     </a-form-item>
                     <a-form-item label="Work Place" style="width: 100%">
-                      <a-select v-bind:class="(disableWorkPlace) ? 'disable' : ''" v-decorator="[
+                      <a-select v-decorator="[
                         'workPlaceId',
                         {
                           rules: [
@@ -229,9 +233,9 @@ export default {
   beforeMount() {
     this.getFirstDateAndLastDate();
     this.form = this.$form.createForm(this, { name: "register" });
-    if(window.location.href.includes('work')) {
+    if (window.location.href.includes('work')) {
       this.typeEdit = 2;
-    }else {
+    } else {
       this.typeEdit = 1;
     }
   },
@@ -307,7 +311,7 @@ export default {
       const workPlaceId = this.workPlace.find((item) => {
         return item.name == payload.workPlaceId
       });
-      if(workPlaceId) {
+      if (workPlaceId) {
         payload.workPlaceId = workPlaceId.id
       }
       // console.log(payload);
@@ -377,10 +381,10 @@ export default {
         // const listUser = resUser.data.data;
         // resUser.data.data
         const listEvent = [];
-        listAdmin.forEach((item)=> {
+        listAdmin.forEach((item) => {
           for (const key in item) {
-            if(key.includes('day') && item[key].length > 0){
-              item[key].forEach((eventOnDay)=> {
+            if (key.includes('day') && item[key].length > 0) {
+              item[key].forEach((eventOnDay) => {
                 let colorEvent = "Green";
                 if (eventOnDay.workTypeName === "Work At Company") {
                   colorEvent = "Red";
@@ -475,7 +479,7 @@ export default {
     },
     setToday() {
       const thisMonth = new Date().getMonth();
-      if( this.currentMonth !== thisMonth) {
+      if (this.currentMonth !== thisMonth) {
         this.currentMonth = thisMonth;
       }
       let date = new Date().toJSON().slice(0, 10);
@@ -484,13 +488,13 @@ export default {
     },
     prev() {
       this.$refs.calendar.prev();
-      if(this.type == "month") {
+      if (this.type == "month") {
         this.currentMonth--;
       }
     },
     next() {
       this.$refs.calendar.next();
-      if(this.type == "month") {
+      if (this.type == "month") {
         this.currentMonth++;
       }
     },
@@ -598,5 +602,9 @@ export default {
 
 .disable {
   pointer-events: none;
+}
+
+.v-calendar.v-calendar-events .v-calendar-weekly__day {
+  height: 200px;
 }
 </style>

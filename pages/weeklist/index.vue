@@ -4,19 +4,20 @@
       <CalendarSidebar @searchValue="onSearch" />
     </div>
     <div class="calendar">
-      <CalendarWorkList :searchValue="searchKey" />
+      <!-- <CalendarWorkList :searchValue="searchKey" /> -->
+      <TableCustom :searchValue="searchKey" />
     </div>
   </div>
 </template>
 
 <script>
-import CalendarWorkList from "~/components/CalendarWorkList";
+import TableCustom from "~/components/TableCustom";
 import CalendarSidebar from "~/components/CalendarSidebar";
 
 export default {
   name: "table",
   components: {
-    CalendarWorkList,
+    TableCustom,
     CalendarSidebar,
   },
   data() {

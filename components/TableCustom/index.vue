@@ -7,6 +7,9 @@
         <span>{{ this.datePicker.endDate }}</span>
       </div>
       <v-spacer></v-spacer>
+      <nuxt-link to="/work" class="toolbar-link" style="color: rgba(0, 0, 0, 0.87);">
+          View by Day or Month
+        </nuxt-link>
       <a-week-picker class="ma-2" :locale="locale" :allowClear="true" @change="onChange" />
     </div>
     <!-- -------------------table----------------------- -->
@@ -15,83 +18,76 @@
         <a-tag v-for="tag in monday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
             Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="tuesday" slot-scope="tuesday" key="tuesday">
         <a-tag v-for="tag in tuesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="wednesday" slot-scope="wednesday" key="wednesday">
         <a-tag v-for="tag in wednesday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="thursday" slot-scope="thursday" key="thursday">
         <a-tag v-for="tag in thursday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="friday" slot-scope="friday" key="friday">
         <a-tag v-for="tag in friday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="saturday" slot-scope="saturday" key="saturday">
         <a-tag v-for="tag in saturday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
       <div class="tag-box" slot="sunday" slot-scope="sunday" key="sunday">
         <a-tag v-for="tag in sunday" @click="handleClickTag(tag)" :key="tag.id" :color="colorTag(tag.workTypeName)">
           <a-tooltip placement="topLeft" :title="tag.workTypeName">
-            Title: {{ tag.title }} <br />
-            Description: {{ tag.description }} <br />
+             Title: {{ tag.title }} <br />
             Head Quarter name: {{ tag.headQuarterName }} <br />
             Work Place name: {{ tag.workPlaceName }} <br />
-            Shift name: {{ tag.shiftName }} <br />
-            {{ `${tag.startTime} - ${tag.endTime}` }}
+            Work Type: {{ tag.workTypeName }} <br />
+            {{ `${formatAMPM(tag.startTime)} - ${formatAMPM(tag.endTime)}` }}
           </a-tooltip>
         </a-tag>
       </div>
@@ -340,7 +336,7 @@ export default {
   },
   beforeMount() {
     this.form = this.$form.createForm(this, { name: "register" });
-    if (window.location.href.includes('work')) {
+    if (window.location.href.includes('work') || window.location.href.includes('weeklist')) {
       this.typeEdit = 2;
     } else {
       this.typeEdit = 1;
@@ -389,7 +385,7 @@ export default {
       this.getWorkTypes(),
       this.getHeadQuaters(),
       this.getWorkPlaces(),
-      this.getListEvents(),
+      this.getUserSchedule(),
     ]);
   },
   methods: {
@@ -571,7 +567,18 @@ export default {
       let day = date.getDate();
       let month = date.getMonth() + 1;
       return day + ' / ' + month;
-    }
+    },
+    formatAMPM(dateString) {
+      const date = new Date(dateString);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      const strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    },
   },
 };
 </script>
